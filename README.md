@@ -23,14 +23,14 @@ $ mpirun -np 1 mpi_factorial 100
 
 Install dependencies:
 ```
-sudo apt install mpich
-sudo apt install libgmp-dev
+$ sudo apt install mpich
+$ sudo apt install libgmp-dev
 ```
 
 Build:
 ```
-mkdir build && cd build
-cmake -DCMAKE_BUILD_TYPE=Debug $PATH_TO_SOURCES_ROOT_DIR && make
+$ mkdir build && cd build
+$ cmake -DCMAKE_BUILD_TYPE=Debug $PATH_TO_SOURCES_ROOT_DIR && make
 ```
 
 After build `build/bin` directory will contain two executables: `mpi_factorial` conforming Task's conditions and `tests`. The latter is used for running tests on Task's solver implementation and should be used as part of `run_tests.sh` script, which is located in build directory.
@@ -39,7 +39,34 @@ After build `build/bin` directory will contain two executables: `mpi_factorial` 
 
 Usage example:
 ```
-mpirun -np 4 mpi_factorial 1000 --to-file
+$ mpirun -np 4 mpi_factorial 1000 --to-file
 ```
 
 ## Results Analysis
+
+This graph presents measurements of `mpi_factorial` program calculating `300000!` with different number of processes. Executions were conducted on laptop with: Intel(R) Core(TM) i5-8265U CPU @ 1.60GHz.
+
+![plot](plot.png)
+
+From this data it can be inferred that factorial calculation can be significantly accelerated when launched on up to 8 processes, which corresponds to number of hyper-threads on the tested device. First 4 points may be seen as contradicting the Amdahl's law, however such a speedup can be explained by a better caches locality when using more CPUs.
+
+## Appendix
+
+### Table representation of data from the graph.
+
+| Number of processes | Mean execution time (ms) |
+| :-----------------: | :----------------------: |
+| 1 | 7350 |
+| 2 | 2190 |
+| 3 | 1070 |
+| 4 | 770 |
+| 5 | 790 |
+| 6 | 620 |
+| 7 | 560 |
+| 8 | 460 |
+| 9 | 660 |
+| 10 | 630 |
+| 11 | 640 |
+| 12 | 670 |
+| 13 | 720 |
+| 14 | 730 |

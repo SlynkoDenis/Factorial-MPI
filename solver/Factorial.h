@@ -17,7 +17,7 @@ public:
     std::optional<mpz_class> ComputeFactorial(int number);
 
 public:
-    static mpz_class FactorialOneProcess(mpz_class endNumber, mpz_class startNumber = 1);
+    static mpz_class FactorialOneProcess(int endNumber, int startNumber = 1);
 
     static constexpr int MESSAGE_TAG = 0;
     static constexpr int ROOT_PROCESS_ID = 0;

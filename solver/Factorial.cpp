@@ -104,11 +104,11 @@ void MPIFactorial::sideProcessCalculation(int numProcesses, int processId, int n
     utils::exceptIfMPIError(
         MPI_Isend(raw.data(), rawSize, MPI_CHAR, ROOT_PROCESS_ID,
                   MESSAGE_TAG, MPI_COMM_WORLD, &dataRequest));
-    utils::exceptIfMPIError(MPI_Request_free(&sizeRequest));
-    utils::exceptIfMPIError(MPI_Request_free(&dataRequest));
+    utils::exceptIfMPIError(MPI_Wait(&sizeRequest, MPI_STATUS_IGNORE));
+    utils::exceptIfMPIError(MPI_Wait(&dataRequest, MPI_STATUS_IGNORE));
 }
 
-mpz_class MPIFactorial::FactorialOneProcess(mpz_class endNumber, mpz_class startNumber) {
+mpz_class MPIFactorial::FactorialOneProcess(int endNumber, int startNumber) {
     if (endNumber < 0) {
         std::stringstream oss;
         oss << "unable to calculate factorial up to negative number " << endNumber;
@@ -120,10 +120,10 @@ mpz_class MPIFactorial::FactorialOneProcess(mpz_class endNumber, mpz_class start
         throw std::invalid_argument(oss.str());
     }
 
-    mpz_class startIdx = startNumber + 1;
-    for (auto i = startIdx; i <= endNumber; ++i) {
-        startNumber *= i;
+    mpz_class result = startNumber;
+    for (auto i = startNumber + 1; i <= endNumber; ++i) {
+        result *= i;
     }
-    return startNumber;
+    return result;
 }
 }   // namespace mpi_factorial
